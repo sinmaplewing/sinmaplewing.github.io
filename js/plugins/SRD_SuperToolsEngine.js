@@ -180,6 +180,7 @@ function WindowManager() {
 	throw new Error('Great job. WindowManager is a static class! ʕ·ᴥ·　ʔ');
 }
 
+/*
 // Fix the flag check for 1.6 editor and 1.5 or below project
 if(process.versions['node-webkit'] >= "0.13.0" && Utils.RPGMAKER_VERSION < "1.6.0") {
 
@@ -190,6 +191,7 @@ Utils.isOptionValid = function(name) {
 };
 
 }
+*/
 
 (function(_) {
 

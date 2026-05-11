@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostListItem from '../components/PostListItem.astro';
+import { getPublishedPosts, getCategoryCounts, getTagCounts, categoryPath, tagPath } from '../lib/posts';
+import { SITE } from '../lib/site';
+
+const allPosts = await getPublishedPosts();
+const recent = allPosts.slice(0, 10);
+const categories = [...(await getCategoryCounts()).entries()].sort((a, b) => b[1] - a[1]);
+const tags = [...(await getTagCounts()).entries()].sort((a, b) => b[1] - a[1]);
+const totalPosts = allPosts.length;
+const lastUpdated = allPosts[0]?.data.lastmod ?? allPosts[0]?.data.date;
+function fmt(d?: Date) {
+  if (!d) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+---
+<BaseLayout title={SITE.name} description={SITE.description}>
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header home-header">
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a>
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">歡迎光臨《{SITE.name}》！</h1>
+          </div>
+        </div>
+      </div>
+      <article class="post markdown-content">
+        <h2>最新公告</h2>
+        <p>歡迎大家來到翼世界夢想領域這個我的小天地坐坐，這裡是放置我個人雜七雜八作品的地方。本網站為網站封存版，已不再更新。</p>
+
+        <h2>網站數據</h2>
+        <ul>
+          <li>目前文章數：{totalPosts}</li>
+          <li>最後更新時間：{fmt(lastUpdated)}</li>
+        </ul>
+
+        <h2>分類瀏覽</h2>
+        <div class="list-total-categories">
+          <ul>
+            {categories.map(([name, count]) => (
+              <li><a href={categoryPath(name)}>{name} ({count})</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <h2>標籤瀏覽</h2>
+        <div class="list-total-tags">
+          <ul>
+            {tags.map(([name, count]) => (
+              <li><a href={tagPath(name)}>{name} ({count})</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <h2>最新文章</h2>
+        <ul class="post-item-list">
+          {recent.map((post) => <PostListItem post={post} />)}
+        </ul>
+        <div class="pagination-section">
+          <nav><a class="page-numbers" href="/archive/">看更多 →</a></nav>
+        </div>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+import { SITE, SOCIAL_LINKS } from '../lib/site';
+import { getCategoryCounts, getTagCounts, categoryPath, tagPath } from '../lib/posts';
+
+const categories = [...(await getCategoryCounts()).entries()].sort((a, b) => b[1] - a[1]);
+const tags = [...(await getTagCounts()).entries()].sort((a, b) => b[1] - a[1]);
+---
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="category-navigator">
+      <h2>分類瀏覽</h2>
+      <div class="list-total-categories">
+        <ul>
+          {categories.map(([name, count]) => (
+            <li><a href={categoryPath(name)}>{name} ({count})</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div class="tag-navigator">
+      <h2>標籤瀏覽</h2>
+      <div class="list-total-tags">
+        <ul>
+          {tags.map(([name, count]) => (
+            <li><a href={tagPath(name)}>{name} ({count})</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <div class="copyright-wrapper">
+      <section class="copyright">
+        {SITE.name} ( <a href="/">{SITE.url}</a> ) By {SITE.author}
+      </section>
+      <nav>
+        <ul class="extra-menu">
+          {SOCIAL_LINKS.map((s) => (
+            <li><a href={s.href} aria-label={s.label} rel="noopener noreferrer" target="_blank"><i class={`fab ${s.icon}`}></i></a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</footer>

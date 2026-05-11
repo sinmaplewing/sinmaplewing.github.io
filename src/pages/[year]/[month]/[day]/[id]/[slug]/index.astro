@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../../../../layouts/BaseLayout.astro';
+import { categoryPath, tagPath } from '../../../../../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => {
+    const d = post.data.date;
+    return {
+      params: {
+        year: String(d.getFullYear()),
+        month: String(d.getMonth() + 1).padStart(2, '0'),
+        day: String(d.getDate()).padStart(2, '0'),
+        id: String(post.data.id),
+        slug: post.data.slug,
+      },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const headerBg = post.data.featured_image
+  ? `background: url('${post.data.featured_image}'); background-size: cover; background-position: center center;`
+  : '';
+function fmtDateTime(d: Date) {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+const breadcrumbCat = post.data.categories?.[0];
+---
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header post-header" style={headerBg}>
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a>
+              {breadcrumbCat && (
+                <>
+                  {' > '}<a href={categoryPath(breadcrumbCat)}>{breadcrumbCat}</a>
+                </>
+              )}
+              {' > '}{post.data.title}
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">{post.data.title}</h1>
+            <div class="category-section">
+              {post.data.categories && post.data.categories.length > 0 && (
+                <span class="header-item">
+                  <i class="fas fa-folder-open"></i>
+                  {post.data.categories.map((c, i) => (
+                    <>{i > 0 && ', '}<a href={categoryPath(c)}>{c}</a></>
+                  ))}
+                </span>
+              )}
+              {post.data.tags && post.data.tags.length > 0 && (
+                <span class="header-item">
+                  <i class="fas fa-tags"></i>
+                  {post.data.tags.map((t, i) => (
+                    <>{i > 0 && ', '}<a href={tagPath(t)}>{t}</a></>
+                  ))}
+                </span>
+              )}
+            </div>
+            <div class="author-section">
+              <span class="header-item">
+                <i class="fas fa-user"></i> 灆洢
+              </span>
+              <span class="header-item">
+                <i class="fas fa-clock"></i> {fmtDateTime(post.data.date)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <article class="post markdown-content">
+        <Content />
+      </article>
+    </div>
+  </div>
+</BaseLayout>

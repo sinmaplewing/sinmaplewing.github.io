@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => !data.draft && !data.private);
+  return pages.map((page) => ({
+    params: { slug: page.data.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+<BaseLayout title={page.data.title} description={page.data.excerpt}>
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header default-background-header page-header">
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a> &gt; {page.data.title}
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">{page.data.title}</h1>
+          </div>
+        </div>
+      </div>
+      <article class="post markdown-content">
+        <Content />
+      </article>
+    </div>
+  </div>
+</BaseLayout>

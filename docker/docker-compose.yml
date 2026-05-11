@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: knightzone_wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: localdev
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-allowed-packet=512M
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ../extracted/wordpress-full-backup/wordpress-db.sql:/docker-entrypoint-initdb.d/01-dump.sql:ro
+    ports:
+      - "33306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  wordpress:
+    image: wordpress:6.8-php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../extracted/wordpress-full-backup/files/home/maplewing/wordpress:/var/www/html
+      - ./wp-config-local.php:/var/www/html/wp-config.php:ro
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DEBUG: 1
+
+  wpcli:
+    image: wordpress:cli
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33"
+    volumes:
+      - ../extracted/wordpress-full-backup/files/home/maplewing/wordpress:/var/www/html
+      - ./wp-config-local.php:/var/www/html/wp-config.php:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["sleep infinity"]
+    profiles: ["tools"]
+
+volumes:
+  dbdata:

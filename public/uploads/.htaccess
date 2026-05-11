@@ -1,0 +1,5 @@
+
+# BEGIN protect-uploads Plugin
+	Options -Indexes
+# [date=2019-12-10 11:11.07] [php=7.3.0RC2] [plugin_name=protect-uploads] [version=0.1]
+# END protect-uploads Plugin

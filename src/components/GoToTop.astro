@@ -1,0 +1,33 @@
+---
+---
+<button id="go_to_top_button" class="go-to-top-button" title="回頂端">↑</button>
+
+<script>
+  const btn = document.getElementById('go_to_top_button');
+  if (btn) {
+    const display = () => {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        btn.style.display = 'block';
+      } else {
+        btn.style.display = 'none';
+      }
+    };
+    window.addEventListener('scroll', display);
+    btn.addEventListener('click', () => {
+      const duration = 1000;
+      const cosParam = window.scrollY / 2;
+      let scrollCount = 0;
+      let oldTs = performance.now();
+      const step = (newTs: number) => {
+        scrollCount += Math.PI / (duration / (newTs - oldTs));
+        if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+        if (window.scrollY === 0) return;
+        window.scrollTo(0, Math.round(cosParam + cosParam * Math.cos(scrollCount)));
+        oldTs = newTs;
+        window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    });
+    display();
+  }
+</script>

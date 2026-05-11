@@ -1,0 +1,37 @@
+---
+import { SITE, HEADER_MENU } from '../lib/site';
+---
+<header class="site-header">
+  <div class="logo-section">
+    <a href="/"><img src={SITE.logo} alt={SITE.name} /></a>
+  </div>
+  <div class="nav-section" id="nav-section">
+    <ul class="header-menu">
+      {HEADER_MENU.map((item) => (
+        <li><a href={item.href}>{item.label}</a></li>
+      ))}
+    </ul>
+    <div class="search-form-wrapper">
+      <form role="search" method="get" class="search-form" action="/search/">
+        <label>
+          <span class="screen-reader-text">搜尋：</span>
+          <input type="search" class="search-field" placeholder="搜尋..." name="s" />
+        </label>
+        <input type="submit" class="search-submit" value="搜尋" />
+      </form>
+    </div>
+  </div>
+  <div class="nav-button">
+    <button id="nav-open-button" aria-label="開啟選單"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<script>
+  const navOpen = document.getElementById('nav-open-button');
+  const navSection = document.getElementById('nav-section');
+  if (navOpen && navSection) {
+    navOpen.addEventListener('click', () => {
+      navSection.classList.toggle('open');
+    });
+  }
+</script>

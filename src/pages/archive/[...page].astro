@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostListItem from '../../components/PostListItem.astro';
+import { getPublishedPosts, type Post } from '../../lib/posts';
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = await getPublishedPosts();
+  return paginate(posts, { pageSize: 20 });
+};
+
+interface Props {
+  page: Page<Post>;
+}
+
+const { page } = Astro.props;
+---
+<BaseLayout title={`封存頁 第 ${page.currentPage} 頁`} description="全部文章封存">
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header default-background-header archive-header">
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a> &gt; 封存頁 ({page.currentPage} / {page.lastPage})
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">封存頁</h1>
+          </div>
+        </div>
+      </div>
+      <article class="post">
+        <ul class="post-item-list">
+          {page.data.map((post) => <PostListItem post={post} />)}
+        </ul>
+        <div class="pagination-section">
+          <nav>
+            {page.url.prev && <a class="page-numbers" href={page.url.prev}>&lt;</a>}
+            <span class="page-numbers current">{page.currentPage} / {page.lastPage}</span>
+            {page.url.next && <a class="page-numbers" href={page.url.next}>&gt;</a>}
+          </nav>
+        </div>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

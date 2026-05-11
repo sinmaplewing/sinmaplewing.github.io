@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="404 找不到頁面">
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header default-background-header archive-header">
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a> &gt; 404
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">找不到頁面</h1>
+          </div>
+        </div>
+      </div>
+      <article class="post markdown-content" style="text-align: center;">
+        <p>這個網址在封存版找不到對應的頁面。可能的原因：</p>
+        <ul style="display: inline-block; text-align: left;">
+          <li>原網站的連結結構未在此封存版重建</li>
+          <li>該內容已從封存版中移除</li>
+          <li>網址有誤</li>
+        </ul>
+        <p style="margin-top: 2em;">
+          <a class="button404" href="/">回首頁</a>
+        </p>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

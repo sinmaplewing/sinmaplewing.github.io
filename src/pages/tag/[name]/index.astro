@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostListItem from '../../../components/PostListItem.astro';
+import { getPublishedPosts, getTagCounts } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const counts = await getTagCounts();
+  return [...counts.keys()].map((name) => ({ params: { name }, props: { name } }));
+}
+
+const { name } = Astro.props;
+const allPosts = await getPublishedPosts();
+const posts = allPosts.filter((p) => p.data.tags?.includes(name));
+---
+<BaseLayout title={`標籤：${name}`} description={`標籤「${name}」共 ${posts.length} 篇文章`}>
+  <div class="outer-container">
+    <img src="/theme/me.png" class="me" alt="" />
+    <div class="container">
+      <div class="content-header default-background-header archive-header">
+        <div class="header-inner">
+          <div class="breadcrumb">
+            <div class="breadcrumb-inner">
+              <a href="/"><i class="fas fa-home"></i></a> &gt; 標籤 &gt; {name}
+            </div>
+          </div>
+          <div class="title-section">
+            <h1 class="post-title">標籤：{name}</h1>
+          </div>
+        </div>
+      </div>
+      <article class="post">
+        <ul class="post-item-list">
+          {posts.map((post) => <PostListItem post={post} />)}
+        </ul>
+      </article>
+    </div>
+  </div>
+</BaseLayout>

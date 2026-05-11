@@ -1,0 +1,43 @@
+---
+import type { Post } from '../lib/posts';
+import { postPath } from '../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const url = postPath(post);
+const date = post.data.date;
+const thumbStyle = post.data.featured_image
+  ? `background: url('${post.data.featured_image}') #999; background-size: cover; background-position: center center;`
+  : 'background: #999;';
+
+function fmtDateTime(d: Date) {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+---
+<li class="post-item">
+  <a class="post-item-inner" href={url}>
+    <div class="post-item-thumbnail" style={thumbStyle}></div>
+    <div class="post-item-meta">
+      <div class="post-item-category">
+        <span class="header-item">
+          <i class="fas fa-clock"></i> {fmtDateTime(date)}
+        </span>
+        {post.data.categories && post.data.categories.length > 0 && (
+          <span class="header-item">
+            <i class="fas fa-folder-open"></i> {post.data.categories.join(', ')}
+          </span>
+        )}
+        {post.data.tags && post.data.tags.length > 0 && (
+          <span class="header-item">
+            <i class="fas fa-tags"></i> {post.data.tags.join(', ')}
+          </span>
+        )}
+      </div>
+      <div class="post-item-title">{post.data.title}</div>
+    </div>
+  </a>
+</li>

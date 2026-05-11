@@ -9,6 +9,11 @@ html, body {
     font-weight: 400;
 }
 
+body {
+    background: url("/uploads/2020/08/background3.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
 h1, h2, h3, h4, h5, h6, b, strong {
     font-weight: 700;
 }

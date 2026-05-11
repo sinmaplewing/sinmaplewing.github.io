@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../../../../layouts/BaseLayout.astro';
 import { categoryPath, tagPath } from '../../../../../../lib/posts';
+import { SITE } from '../../../../../../lib/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -22,9 +23,8 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const headerBg = post.data.featured_image
-  ? `background: url('${post.data.featured_image}'); background-size: cover; background-position: center center;`
-  : '';
+const headerBgUrl = post.data.featured_image ?? SITE.defaultFeaturedImage;
+const headerBg = `background: url('${headerBgUrl}'); background-size: cover; background-position: center center;`;
 function fmtDateTime(d: Date) {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;

@@ -1,6 +1,7 @@
 ---
 import type { Post } from '../lib/posts';
 import { postPath } from '../lib/posts';
+import { SITE } from '../lib/site';
 
 interface Props {
   post: Post;
@@ -9,9 +10,8 @@ interface Props {
 const { post } = Astro.props;
 const url = postPath(post);
 const date = post.data.date;
-const thumbStyle = post.data.featured_image
-  ? `background: url('${post.data.featured_image}') #999; background-size: cover; background-position: center center;`
-  : 'background: #999;';
+const thumbUrl = post.data.featured_image ?? SITE.defaultFeaturedImage;
+const thumbStyle = `background: url('${thumbUrl}') #999; background-size: cover; background-position: center center;`;
 
 function fmtDateTime(d: Date) {
   const pad = (n: number) => String(n).padStart(2, '0');

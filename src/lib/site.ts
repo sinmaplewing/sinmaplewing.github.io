@@ -4,6 +4,7 @@ export const SITE = {
   author: '灆洢 ( Maplewing )',
   url: 'https://knightzone.studio',
   logo: '/theme/logo.png',
+  defaultFeaturedImage: '/uploads/2020/08/banner.png',
 };
 
 export const HEADER_MENU = [

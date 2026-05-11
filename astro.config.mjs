@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://sinmaplewing.github.io',
+  site: 'https://knightzone.studio',
   base: '/',
   trailingSlash: 'always',
   build: {
